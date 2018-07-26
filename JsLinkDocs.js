@@ -49,36 +49,4 @@ function linkFilenameFiledTemplate(ctx) {
 
     
 
-    var restAPIURL =_spPageContextInfo.webAbsoluteUrl+'/_api/web/webinfos/add';
-        var newSiteData = JSON.stringify(
-        {
-        'parameters': {
-        '__metadata': {
-        'type': 'SP.WebInfoCreationInformation'
-        },
-        'Url': $(1:{'hellorestapi'}),
-        'Description': 'Subsite created from REST API', 
-        'Title': 'hellorestapi',
-        'Language': 1033,
-        'WebTemplate': 'STS#0',
-        'UseUniquePermissions': false
-        }
-        });
-        $.ajax
-        ({
-        url: restAPIURL,
-        type: 'POST',
-        async: false,
-        data: newSiteData,
-        headers: {
-         'accept': 'application/json;odata=verbose',
-         'content-type': 'application/json;odata=verbose',
-         'X-RequestDigest': $('#__REQUESTDIGEST').val()
-         },
-        success: function(data){
-        console.log('site created');
-        },
-        error: function(data){
-        console.log('Error creating site');
-        }
-        }); 
+  
