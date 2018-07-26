@@ -1,0 +1,80 @@
+<html>
+<head>
+    <style>
+    #subsitediv{
+        padding: 10px;
+        border: 2px;
+        text-align: center;
+        text-decoration-line: underline;
+        width: 100px;
+        height: 50px;
+    }
+    #subsitecreate{
+        width: 120px;
+        height: 50px;
+    }
+    </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+$("#subsitecreate").click(function(){
+
+    $("#message").text("The Subsite Creation is in progress please wait,dont close the window or click anywhere").css('background-color','red');
+var restAPIURL =_spPageContextInfo.webAbsoluteUrl+ "/_api/web/webinfos/add";  
+var newSiteData = JSON.stringify(
+{
+    'parameters': {  
+         '__metadata': {   
+               'type': 'SP.WebInfoCreationInformation'   
+         },  
+         'Url': 'hellorestapi',   
+         'Description': 'Subsite created from REST API',  
+         'Title': 'hellorestapi',  
+         'Language': 1033,  
+         'WebTemplate': 'STS#0',  
+          'UseUniquePermissions': false  
+    }  
+ });  
+
+$.ajax  
+({    
+    url: restAPIURL,    
+    type: "POST",    
+    async: false,  
+    data: newSiteData,    
+    headers: {  
+        "accept": "application/json;odata=verbose",  
+        "content-type": "application/json;odata=verbose",  
+        "X-RequestDigest": $('#__REQUESTDIGEST').val()  
+    },   
+    success: function(data){    
+         console.log('site created');  
+         $("#message").text("The Subsite Creation has completed please verify").css('background-color','green');
+    },    
+    error: function(data){   
+        console.log('Error creating site');   
+    }    
+}); 
+
+});
+
+});
+
+
+
+</script>
+</head>
+
+<body>
+    <div id="subsitediv">
+        Click on the below button to create the subsite
+    </div>
+    <br/>
+    <br/>
+    <input type="button" id="subsitecreate"  value="Create Subsite"/>
+    <br/>
+    <div id="message">  
+    </div>
+</body>
+</html>

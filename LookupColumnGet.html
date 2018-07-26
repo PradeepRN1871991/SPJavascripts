@@ -1,0 +1,67 @@
+
+<html>
+<head>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+    console.log("Jquery Loaded");
+    GetLookupColumns();
+
+function GetLookupColumns()
+{
+$.ajax({
+        url: _spPageContextInfo.webAbsoluteUrl +"/_api/Web/Lists/GetByTitle('LookupTest')/Items?$select=Title,FinalLookup1/Title&$expand=FinalLookup1/Title",
+        method: "GET",
+        headers: { "Accept": "application/json; odata=verbose"},
+        async:false,
+        success: function(data){
+        if(data.d.results!= undefined)
+        {
+            for(var i=0; i<data.d.results.length;i++)
+            {
+                var item=data.d.results[i];
+
+                for(var j=0; j<data.d.results[i].FinalLookup1.results.length;j++)
+                {
+                  
+                    $("#lookupcolumnvalues").append("The MultiValue is"+" "+data.d.results[i].FinalLookup1.results[j].Title);
+                    $("#lookupcolumnvalues").append(";");
+                }
+
+                alert($("#lookupcolumnvalues").text());
+               // $("#lookupcolumnvalues").html("<br/>");
+               // $("#lookupcolumnvalues").text(data.d.results[i].item.FinalLookup1);
+                //console.log(item.Title+" "+"Printing the Title");
+                //console.log(item.FinalLookup1.Title+" "+"printing the FinalLookup Value");
+            }
+            //console.log(JSON.stringify(data.d.results));
+            //console.log(data.d.results[0].FinalLookup1.results[0].Title);
+            //console.log(data.d.results[1].FinalLookup1.results[1].Title);
+           
+           
+        //User is a Member, do something or return true
+        }
+        else
+        {
+            status=false;
+            
+        }
+        }
+        });
+}
+
+        });
+
+    </script>
+</head>
+<body>
+    <div id="lookupcolumnvalues">
+
+    </div>
+</body>
+</html>
+
+
+
+
+

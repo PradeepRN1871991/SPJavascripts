@@ -1,0 +1,163 @@
+<style>
+    #btnRole
+    {
+    width:100px;
+    height:30px;
+    }
+    #group
+    {
+    width:200px;
+    height:40px;
+    padding:10px;
+    margin:10px;
+    }
+    #getgroupid
+    {
+    width:300px;
+    height:30px;
+    }
+    </style><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><script>
+    $(document).ready(function(){
+        SP.SOD.executeFunc('sp.js', 'SP.ClientContext', LoadJSFile);
+    
+    
+    function LoadJSFile()
+    {
+        console.log("sp.js file loaded successfully");
+        LoadAllGroups();
+    }
+    
+        $("#btnRole").click(function(){
+           
+           var ctx= new SP.ClientContext();
+           var selecteditemid=new SP.ListOperation.Selection.getSelectedItems();
+          for(var i=0; i<selecteditemid.length; i++)
+          {
+          var object=selecteditemid[i];
+          console.log(object.id);
+          var breakinheritance=_spPageContextInfo.webAbsoluteUrl+"/_api/web/lists/GetByTitle('Email Configuration')/items('"+object.id+"')/breakroleinheritance(true)";
+            $.ajax({
+                url:breakinheritance,
+                type:"POST",  
+                dataType:'json', 
+            headers:  
+            {  
+                "Accept": "application/json;odata=verbose",  
+                "Content-Type": "application/json;odata=verbose",  
+                "X-RequestDigest": $("#__REQUESTDIGEST").val(),  
+                "X-HTTP-Method": "POST"  
+            },  
+            success: function(data, status, xhr)  
+            {  
+               alert("item Permission successfully broken");
+               removerole(object);
+               
+            },  
+            error: function(xhr, status, error)  
+            {  
+                alert((data.responseJSON.error)); 
+            }  
+            });
+            
+            
+          }
+      
+        });
+
+        $("#getgroupid").click(function(){
+            var groupname=$("#group").val();
+
+        var groupid=_spPageContextInfo.webAbsoluteUrl+"/_api/web/SiteGroups/getbyname('"+"'"+groupname+"'"+"')/$select=id";
+
+        $.ajax({
+                url:groupid,
+                type:"GET",  
+                dataType:'json', 
+            headers:  
+            {  
+                "Accept": "application/json;odata=verbose",  
+                "Content-Type": "application/json;odata=verbose",  
+                "X-RequestDigest": $("#__REQUESTDIGEST").val(),  
+                "X-HTTP-Method": "GET"  
+            },  
+            success: function(data, status, xhr)  
+            {  
+               for(var i=0; i<data.d.results.length;i++)
+               {
+                   alert(data.d.results[i].Id);
+               }
+               
+            },  
+            error: function(xhr, status, error)  
+            {  
+                alert((data.responseJSON.error)); 
+            }  
+            });
+
+
+        });
+        
+         function removerole(object)
+          {
+          var removeroles=_spPageContextInfo.webAbsoluteUrl+"/_api/web/lists/GetByTitle('Email Configuration')/items('"+object.id+"')/roleassignments/removeroleassignment(principalid=21,roledefid=1073741827)";
+            $.ajax({
+                url:removeroles,
+                type:"POST",  
+                dataType:'json', 
+            headers:  
+            {  
+                "Accept": "application/json;odata=verbose",  
+                "Content-Type": "application/json;odata=verbose",  
+                "X-RequestDigest": $("#__REQUESTDIGEST").val(),  
+                "X-HTTP-Method": "POST"  
+            },  
+            success: function(data, status, xhr)  
+            {  
+               alert("item roles successfully removed");
+               
+            },  
+            error: function(xhr, status, error)  
+            {  
+                alert((data.responseJSON.error)); 
+            }  
+            });
+          }
+          
+          function LoadAllGroups()
+          {
+            var getallgroups=_spPageContextInfo.webAbsoluteUrl+"/_api/web/Sitegroups";
+            $.ajax({
+                url:getallgroups,
+                type:"GET",  
+                dataType:'json', 
+            headers:  
+            {  
+                "Accept": "application/json;odata=verbose",  
+                "Content-Type": "application/json;odata=verbose",  
+                "X-RequestDigest": $("#__REQUESTDIGEST").val(),  
+                "X-HTTP-Method": "POST"  
+            },  
+            success: function(data, status, xhr)  
+            {  
+                $.each(data.d.results,function(index,item){      
+                console.log(item["Title"]);
+               $("#group").append($("<option />").val(item["Title"]).text(item["Title"]));
+               
+       });
+               
+            },  
+            error: function(xhr, status, error)  
+            {  
+                alert((data.responseJSON.error)); 
+            }  
+            });
+          }
+           
+    });
+    </script> 
+    <h2>Permission Table<br/></h2>​<br/>​​<br/><input type="Button" id="btnRole" value="Submit1"/>​​​​​​​<br/>​​ ​<br/>
+    <div>
+       <select id="group"> 
+          <option value="select a value">select a value</option> </select> 
+       <span id="groupid">
+          <input type="button" id="getgroupid" value="Remove Permission for the selected Group"/> ​​​​</span> </div>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#additem
+{
+width:250px;
+height:120px;
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#additem").click(function(){
+        AddListItem();
+    });
+    
+  function AddListItem()  
+{   
+    $.ajax  
+        ({  
+        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/GetByTitle('Testing')/items",  
+        type: "POST",  
+        data: JSON.stringify  
+        ({  
+            __metadata:  
+            {  
+                type: "SP.Data.TestingListItem"  
+            },  
+            Title:"mr",  
+            FirstName:"Pradeep",
+            LastName:"RN",
+            Salary:888888  
+        }),  
+        headers:  
+        {  
+            "Accept": "application/json;odata=verbose",  
+            "Content-Type": "application/json;odata=verbose",  
+            "X-RequestDigest": $("#__REQUESTDIGEST").val(),  
+            "X-HTTP-Method": "POST"  
+        },  
+        success: function(data, status, xhr)  
+        {  
+            alert("item is inserted to the testing list");  
+        },  
+        error: function(xhr, status, error)  
+        {  
+            $("#result").empty().text(data.responseJSON.error);  
+        }  
+    });  
+}  
+    
+    
+});
+</script>
+</head>
+<body>
+<input type="button" name="add item to list" id="additem"/>
+</br>
+<div id="result">
+
+</div>
+</body>
+</html>

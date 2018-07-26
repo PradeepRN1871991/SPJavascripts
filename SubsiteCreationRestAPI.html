@@ -1,0 +1,48 @@
+<html>
+<head>
+    <style>
+    
+    </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+var restAPIURL = "/_api/web/webinfos/add";  
+var newSiteData = JSON.stringify(
+{
+    'parameters': {  
+         '__metadata': {   
+               'type': 'SP.WebInfoCreationInformation'   
+         },  
+         'Url': 'hello',   
+         'Description': 'Subsite created from REST API',  
+         'Title': 'SubSite',  
+         'Language': 1033,  
+         'WebTemplate': 'STS#0',  
+          'UseUniquePermissions': false  
+    }  
+ });  
+$.ajax  
+({    
+    url: restAPIURL,    
+    type: "POST",    
+    async: false,  
+    data: newSiteData,    
+    headers: {  
+        "accept": "application/json;odata=verbose",  
+        "content-type": "application/json;odata=verbose",  
+        "X-RequestDigest": $('#__REQUESTDIGEST').val()  
+    },   
+    success: function(data){    
+         console.log('site created');  
+    },    
+    error: function(data){   
+        console.log('Error creating site');   
+    }    
+}); 
+
+</script>
+</head>
+<body>
+<div>
+    
+</div>
+
+</body>

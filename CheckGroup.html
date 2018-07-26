@@ -1,0 +1,44 @@
+ <html>
+     <head>
+         <style>
+         #check
+         {
+             width: 200px;
+             height: 150px;
+         }
+         
+         </style>
+        <script type="text/javascript">
+
+        $(document).ready(function(){
+            console.log("jquery successfully loaded");
+            
+            $("#check").click(function(){
+                console.log("button click event happened");
+
+                $.ajax({
+                               url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/sitegroups/getByName('Architects India')/Users?$filter=Id eq "+ _spPageContextInfo.userId,
+                               method: "GET",
+                               headers: { "Accept": "application/json; odata=verbose" },
+                               success: function(data){
+                               if(data.d.results[0]!= undefined){
+                                   checkarchitect=true;
+                                   console.log(JSON.stringify(data.d.results));
+                                   console.log("Current user is part of the architects india group");
+                               }
+                               }
+                               });
+                              
+            });
+        });
+            
+            </script>
+            
+     </head>
+     <body>
+
+        <input type="button" id="check" value="check group for current user">Check</body>input>
+     </body>
+ </html>
+ 
+ 
