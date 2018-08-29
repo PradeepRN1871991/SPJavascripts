@@ -1,0 +1,70 @@
+<html>
+<head>
+    <style>
+    #getitems
+    {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 26px;
+    margin:5px 2px;
+    cursor: pointer;
+    }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+
+var sitespurl=_spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('Tasks')/items?$select=RequestPriority,Id&$top=1000";
+ var response = response || [];
+ var count = 1000;
+
+        $("#getitems").click(function()
+        {
+            GetListItems();
+        });
+
+        function GetListItems(){
+        
+        console.log("GetListItems method is called"+"number of times "+":"+count);
+
+        $.ajax({
+
+            url: sitespurl,  
+            method: "GET",  
+            headers: {  
+                "Accept": "application/json; odata=verbose"  
+            },
+            success: function(data){
+                response = response.concat(data.d.results);
+                if (data.d.__next) {
+                    sitespurl = data.d.__next;
+                    count=count+1000;
+                    GetListItems();
+                }
+                $.each(response,function(index, item) {
+                    console.log("request priority is"+":"+item.RequestPriority);
+                   $("#contentareadiv").append("<div>"+"Request priority for the item is"+" "+" :"+item.RequestPriority+" "+"for item id :"+" "+item.Id+"</div>");
+                });
+            },
+            error: function(error){
+                console.log(error);
+            }
+        });
+    }
+
+    });
+    </script>
+</head>
+<body>
+    <input type="button" value="Get Items from TaskList" id="getitems"/>
+</body>
+<div id="contentareadiv">
+
+</div>
+</html>
